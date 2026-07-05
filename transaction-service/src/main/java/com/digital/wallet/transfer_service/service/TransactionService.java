@@ -8,11 +8,13 @@ import com.digital.wallet.transfer_service.event.TransactionEvent;
 import com.digital.wallet.transfer_service.repository.TransactionRepository;
 import com.digital.wallet.transfer_service.util.TransactionMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class TransactionService {
 
@@ -23,6 +25,7 @@ public class TransactionService {
     private final KafkaTemplate<Object, Object> kafkaTemplate;
 
     public void debit(DebitCreditDto debitCreditDto, String userId) {
+        log.info("Sending kafka event to transaction service for account debit {}", userId);
         kafkaTemplate.send("transaction_input_topic", "DEBIT",
                 TransactionEvent
                         .builder()
@@ -33,6 +36,7 @@ public class TransactionService {
     }
 
     public void credit(DebitCreditDto debitCreditDto, String userId) {
+        log.info("Sending kafka event to transaction service for account credit {}", userId);
         kafkaTemplate.send("transaction_input_topic", "CREDIT",
                 TransactionEvent
                         .builder()
@@ -43,6 +47,7 @@ public class TransactionService {
     }
 
     public void transfer(TransferDto transferDto, String userId) {
+        log.info("Sending kafka event to transaction service for transfer {}", userId);
         kafkaTemplate.send("transaction_input_topic", "TRANSFER",
                 TransactionEvent
                         .builder()

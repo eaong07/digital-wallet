@@ -5,14 +5,17 @@ import com.digital.wallet.transfer_service.entity.Transaction;
 import com.digital.wallet.transfer_service.event.TransactionResponseEvent;
 import com.digital.wallet.transfer_service.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 @RequiredArgsConstructor
+@Slf4j
 public class TransactionResponseService {
     private final TransactionRepository transactionRepository;
 
     public void updateTransaction(String type, TransactionResponseEvent event) {
+        log.info("Saving Transaction by user {} with status {}", event.getUserId(), event.getStatus());
         transactionRepository.save(Transaction
                 .builder()
                 .receiver(event.getReceiverId())

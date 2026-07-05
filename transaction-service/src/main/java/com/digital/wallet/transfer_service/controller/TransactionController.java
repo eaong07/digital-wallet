@@ -3,15 +3,16 @@ package com.digital.wallet.transfer_service.controller;
 import com.digital.wallet.transfer_service.dto.DebitCreditDto;
 import com.digital.wallet.transfer_service.dto.TransactionDto;
 import com.digital.wallet.transfer_service.dto.TransferDto;
-import com.digital.wallet.transfer_service.entity.Transaction;
 import com.digital.wallet.transfer_service.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Slf4j
 public class TransactionController {
 
     private final TransactionService transferService;
@@ -20,7 +21,9 @@ public class TransactionController {
     public ResponseEntity debit(@RequestBody DebitCreditDto debitCreditDto,
                                 @RequestHeader(value = "X-User-Id")
                                 String userId) {
+        log.info("Request to debit {}", userId);
         transferService.debit(debitCreditDto, userId);
+        log.info("Amount debited {}", userId);
         return ResponseEntity.accepted().build();
     }
 
