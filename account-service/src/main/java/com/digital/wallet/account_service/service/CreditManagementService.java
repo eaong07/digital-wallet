@@ -24,8 +24,8 @@ public class CreditManagementService implements AccountManagementService {
                         transactionEvent.getUserId())
                 .orElse(null);
         if (account != null) {
-            double newBalance = account.getAmount() + transactionEvent.getAmount();
-            account.setAmount(newBalance);
+            double newBalance = account.getBalance() + transactionEvent.getAmount();
+            account.setBalance(newBalance);
             accountRepository.save(account);
             kafkaTemplate.send(
                     "transaction_output_topic",

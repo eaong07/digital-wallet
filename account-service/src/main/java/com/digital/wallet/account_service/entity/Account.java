@@ -24,6 +24,6 @@ public class Account {
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private AccountTypes type;
-    @Column(name = "amount")
-    private double amount;
+    @Column(name = "balance")
+    private double balance;
 }

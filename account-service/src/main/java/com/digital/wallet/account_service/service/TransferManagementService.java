@@ -39,8 +39,8 @@ public class TransferManagementService implements AccountManagementService {
                             .amount(transactionEvent.getAmount())
                             .build());
         } else {
-            receiver.setAmount(receiver.getAmount() + transactionEvent.getAmount());
-            sender.setAmount(sender.getAmount() - transactionEvent.getAmount());
+            receiver.setBalance(receiver.getBalance() + transactionEvent.getAmount());
+            sender.setBalance(sender.getBalance() - transactionEvent.getAmount());
             accountRepository.saveAll(Arrays.asList(receiver, sender));
             kafkaTemplate.send(
                     "transaction_output_topic",
@@ -63,7 +63,7 @@ public class TransferManagementService implements AccountManagementService {
     ) {
         return sender != null
                 && receiver != null
-                && sender.getAmount() - transactionEvent.getAmount() > 0;
+                && sender.getBalance() - transactionEvent.getAmount() > 0;
 
     }
 }

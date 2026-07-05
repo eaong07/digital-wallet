@@ -2,10 +2,7 @@ package com.digital.wallet.account_service.configuration;
 
 import com.digital.wallet.account_service.consumer.AccountTransactionConsumer;
 import com.digital.wallet.account_service.repository.AccountRepository;
-import com.digital.wallet.account_service.service.AccountManagementService;
-import com.digital.wallet.account_service.service.CreditManagementService;
-import com.digital.wallet.account_service.service.DebitManagementService;
-import com.digital.wallet.account_service.service.TransferManagementService;
+import com.digital.wallet.account_service.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -21,7 +18,7 @@ public class ServiceConfiguration {
     public AccountManagementService credit(
             AccountRepository accountRepository,
             KafkaTemplate<Object, Object> kafkaTemplate
-    ){
+    ) {
         return new CreditManagementService(accountRepository, kafkaTemplate);
     }
 
@@ -29,7 +26,7 @@ public class ServiceConfiguration {
     public AccountManagementService debit(
             AccountRepository accountRepository,
             KafkaTemplate<Object, Object> kafkaTemplate
-    ){
+    ) {
         return new DebitManagementService(accountRepository, kafkaTemplate);
     }
 
@@ -37,13 +34,18 @@ public class ServiceConfiguration {
     public AccountManagementService transfer(
             AccountRepository accountRepository,
             KafkaTemplate<Object, Object> kafkaTemplate
-    ){
+    ) {
         return new TransferManagementService(accountRepository, kafkaTemplate);
     }
 
     @Bean
-    public AccountTransactionConsumer accountTransactionConsumer(Map<String, AccountManagementService> accountManagementServiceMap){
+    public AccountTransactionConsumer accountTransactionConsumer(Map<String, AccountManagementService> accountManagementServiceMap) {
         return new AccountTransactionConsumer(accountManagementServiceMap);
+    }
+
+    @Bean
+    public AccountService accountService(AccountRepository accountRepository) {
+        return new AccountService(accountRepository);
     }
 
 }

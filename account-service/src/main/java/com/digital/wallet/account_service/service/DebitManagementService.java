@@ -24,7 +24,7 @@ public class DebitManagementService implements AccountManagementService {
                         transactionEvent.getUserId())
                 .orElse(null);
         if (isValidDebit(account, transactionEvent)) {
-            account.setAmount(account.getAmount() - transactionEvent.getAmount());
+            account.setBalance(account.getBalance() - transactionEvent.getAmount());
             accountRepository.save(account);
             kafkaTemplate.send(
                     "transaction_output_topic",
@@ -49,6 +49,6 @@ public class DebitManagementService implements AccountManagementService {
     }
 
     private boolean isValidDebit(Account account, TransactionEvent transactionEvent) {
-        return account != null && account.getAmount() - transactionEvent.getAmount() >= 0d;
+        return account != null && account.getBalance() - transactionEvent.getAmount() >= 0d;
     }
 }
