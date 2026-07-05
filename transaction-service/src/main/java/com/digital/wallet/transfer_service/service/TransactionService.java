@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class TransactionService {
@@ -55,5 +56,11 @@ public class TransactionService {
     public List<TransactionDto> getHistory(String userId) {
         List<Transaction> transactions = transactionRepository.findAllByUserId(userId);
         return transactions.parallelStream().map(transactionMapper::toDto).toList();
+    }
+
+    public TransactionDto getTransaction(TransactionDto transactionDto, String userId) {
+        Optional<Transaction> transaction = transactionRepository
+                .findByTransactionIdAndUserId(transactionDto.getTransactionId(), userId);
+        return transaction.map(transactionMapper::toDto).orElseThrow();
     }
 }

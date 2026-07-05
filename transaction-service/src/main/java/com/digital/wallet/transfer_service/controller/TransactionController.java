@@ -1,7 +1,9 @@
 package com.digital.wallet.transfer_service.controller;
 
 import com.digital.wallet.transfer_service.dto.DebitCreditDto;
+import com.digital.wallet.transfer_service.dto.TransactionDto;
 import com.digital.wallet.transfer_service.dto.TransferDto;
+import com.digital.wallet.transfer_service.entity.Transaction;
 import com.digital.wallet.transfer_service.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +43,13 @@ public class TransactionController {
     @GetMapping("/history")
     public ResponseEntity getHistory(@RequestHeader(value = "X-User-Id")
                                      String userId) {
+        return ResponseEntity.ok(transferService.getHistory(userId));
+    }
+
+    @GetMapping("/transaction")
+    public ResponseEntity getTransaction(@RequestHeader(value = "X-User-Id")
+                                         String userId,
+                                         @RequestBody TransactionDto transactionDto) {
         return ResponseEntity.ok(transferService.getHistory(userId));
     }
 
