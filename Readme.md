@@ -79,3 +79,8 @@ cd ../account-service && ./gradlew bootRun
 # Start Transaction Service
 cd ../transaction-service && ./gradlew bootRun
 
+# Architecture
+![img.png](img.png)
+
+# Design Flow
+![img_1.png](img_1.png)
