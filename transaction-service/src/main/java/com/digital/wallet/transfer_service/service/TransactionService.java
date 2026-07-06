@@ -9,8 +9,10 @@ import com.digital.wallet.transfer_service.repository.TransactionRepository;
 import com.digital.wallet.transfer_service.util.TransactionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Example;
 import org.springframework.kafka.core.KafkaTemplate;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +49,10 @@ public class TransactionService {
     }
 
     public void transfer(TransferDto transferDto, String userId) {
+        if (wasDailyLimitExceeded(transferDto, userId)) {
+            log.error("Amount exceeded daily transfer limit");
+            throw new RuntimeException("Amount exceeded daily transfer limit");
+        }
         log.info("Sending kafka event to transaction service for transfer {}", userId);
         kafkaTemplate.send("transaction_input_topic", "TRANSFER",
                 TransactionEvent
@@ -63,9 +69,18 @@ public class TransactionService {
         return transactions.parallelStream().map(transactionMapper::toDto).toList();
     }
 
-    public TransactionDto getTransaction(TransactionDto transactionDto, String userId) {
+    public TransactionDto getTransaction(String transactionID, String userId) {
         Optional<Transaction> transaction = transactionRepository
-                .findByTransactionIdAndUserId(transactionDto.getTransactionId(), userId);
+                .findByTransactionIdAndUserId(transactionID, userId);
         return transaction.map(transactionMapper::toDto).orElseThrow();
+    }
+
+    private boolean wasDailyLimitExceeded(TransferDto transferDto, String userId) {
+        List<Transaction> transactions = transactionRepository.findAllByUserIdAndTransactionDateAndType(
+                userId,
+                java.sql.Date.valueOf(LocalDate.now()),
+                "TRANSFER");
+        double total = transactions.stream().mapToDouble(Transaction::getAmount).sum() + transferDto.getAmount();
+        return total >= 50000d;
     }
 }

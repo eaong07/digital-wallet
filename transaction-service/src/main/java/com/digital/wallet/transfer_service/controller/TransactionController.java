@@ -52,8 +52,8 @@ public class TransactionController {
     @GetMapping("/transaction")
     public ResponseEntity getTransaction(@RequestHeader(value = "X-User-Id")
                                          String userId,
-                                         @RequestBody TransactionDto transactionDto) {
-        return ResponseEntity.ok(transferService.getHistory(userId));
+                                         @RequestHeader(value = "X-Transaction-Id") String transactionID) {
+        return ResponseEntity.ok(transferService.getTransaction(transactionID, userId));
     }
 
 }

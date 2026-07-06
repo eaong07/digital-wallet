@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.util.Date;
 
 @Entity
 @Table(name = "TRANSACTION")
@@ -30,4 +34,7 @@ public class Transaction {
     private String status;
     @Column(name = "amount")
     private double amount;
+    @JdbcTypeCode(value = SqlTypes.DATE)
+    @Column(name = "transactionDate")
+    private Date transactionDate;
 }

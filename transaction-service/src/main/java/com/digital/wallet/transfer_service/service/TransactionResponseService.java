@@ -7,6 +7,7 @@ import com.digital.wallet.transfer_service.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class TransactionResponseService {
                 .status(event.getStatus())
                 .userId(event.getUserId())
                 .amount(event.getAmount())
+                .transactionDate(java.sql.Date.valueOf(LocalDate.now()))
                 .build());
     }
 }

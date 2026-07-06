@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -19,4 +21,5 @@ public class TransactionDto {
     private String userId;
     private String status;
     private double amount;
+    private Date transactionDate;
 }
